@@ -32,7 +32,9 @@ def gen_txn(config, file, parts, lineno, flag, card_acc, real_name):
             print(f"Expense skipped", file=sys.stderr)
             return None
         else:
-            print(f"Income kept in record", file=sys.stderr)
+            # print(f"Income kept in record", file=sys.stderr)
+            print(f"Why keep income in record?", file=sys.stderr)
+            return None
 
     metadata = data.new_metadata(file.name, lineno)
     metadata["imported_category"] = parts[5]
