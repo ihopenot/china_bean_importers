@@ -75,12 +75,16 @@ class Importer(CsvImporter):
                 account1 = None
                 if method == '零钱' or status == '已存入零钱':  # 微信零钱
                     account1 = source_config['account']
-                elif tail := match_card_tail(method):  # cards
+                elif tail := match_card_tail(method if method else ""):  # cards
                     account1 = find_account_by_card_number(
                         self.config, tail)
                     my_assert(
                         account1, f"Unknown card number {tail}", lineno, row)
 
+                if account1 is None:
+                    account1 = unknown_account(self.config, not expense)
+                    tags.add('confirmation-needed')
+                    my_warn(f"Unknown method: {status}", lineno, row)
                 # TODO: handle 零钱通 account
                 # TODO: handle 数字人民币 account?
                 my_assert(
