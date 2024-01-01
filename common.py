@@ -32,17 +32,24 @@ class BillDetailMapping(typing.NamedTuple):
         return self.destination_account, metadata, tags
 
     def match(self, desc: str, payee: str) -> tuple[typing.Optional[str], dict[str, object], set[str]]:
+        nar_matched = True
+        payee_matched = True
         # match narration first
         if desc is not None and self.narration_keywords is not None:
             for keyword in self.narration_keywords:
-                if keyword in desc:
-                    return self.canonicalize()
+                if keyword not in desc:
+                    nar_matched = False
+                    # return self.canonicalize()
         # then try payee
         if payee is not None and self.payee_keywords is not None:
             keywords = self.narration_keywords if self.payee_keywords is SAME_AS_NARRATION else self.payee_keywords
             for keyword in keywords:
-                if keyword in payee:
-                    return self.canonicalize()
+                if keyword not in payee:
+                    payee_matched = False
+                    # return self.canonicalize()
+
+        if nar_matched and payee_matched:
+            return self.canonicalize()
         return None, {}, set()
 
 
