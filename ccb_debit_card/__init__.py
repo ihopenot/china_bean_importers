@@ -12,7 +12,7 @@ class Importer(CsvImporter):
     def __init__(self, config) -> None:
         super().__init__(config)
         self.encoding = "utf8"
-        self.match_keywords = ["中国建设银行个人活期账户全部交易明细"]
+        self.match_keywords = ["中国建设银行", "交易明细"]
         self.file_account_name = "ccb_debit_card"
 
     def parse_metadata(self):
@@ -21,7 +21,7 @@ class Importer(CsvImporter):
         if m := re.search("结束日期:(\d+)", self.full_content):
             self.end = parse(m[1])
         match = re.search("卡号/账号:([0-9]{19})", self.full_content)
-        assert match
+        my_assert(match, "Invalid file, no card number found!", 0, 0)
         card_number = match[0]
         self.card_acc = find_account_by_card_number(self.config, card_number[-4:])
         my_assert(self.card_acc, f"Unknown card number {card_number}", 0, 0)
@@ -80,11 +80,11 @@ class Importer(CsvImporter):
 
                 my_assert(expense is not None, f"Unknown transaction type", lineno, row)
 
-                # unknown account2
-                if expense:
-                    account2 = self.config["unknown_expense_account"]
-                else:
-                    account2 = self.config["unknown_income_account"]
+                account2, new_meta, new_tags = match_destination_and_metadata(self.config, narration, payee)
+                metadata.update(new_meta)
+                tags = tags.union(new_tags)
+                if account2 is None:
+                    account2 = unknown_account(self.config, expense)
 
                 # create transaction
                 txn = data.Transaction(
