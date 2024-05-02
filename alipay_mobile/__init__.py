@@ -106,7 +106,7 @@ class Importer(CsvImporter):
 
                 # find from 商品说明 and 交易对方
                 account2 = None
-                if payee == "余额宝" and "自动转入" in narration:
+                if payee == "余额宝" and ("自动转入" in narration or "转账收款" in narration):
                     account2 = source_config['yuebao_account']
                 elif category == "转账红包":
                     account2 = source_config['red_packet_income_account'] if not expense else source_config['red_packet_expense_account']
