@@ -42,7 +42,7 @@ class BillDetailMapping(typing.NamedTuple):
                     # return self.canonicalize()
         # then try payee
         if payee is not None and self.payee_keywords is not None:
-            keywords = self.narration_keywords if self.payee_keywords is SAME_AS_NARRATION else self.payee_keywords
+            keywords = self.payee_keywords # self.narration_keywords if self.payee_keywords is SAME_AS_NARRATION else self.payee_keywords
             for keyword in keywords:
                 if keyword not in payee:
                     payee_matched = False
