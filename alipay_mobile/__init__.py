@@ -114,7 +114,9 @@ class Importer(CsvImporter):
                     account1 = source_config["yuebao_account"]
                 elif tail := match_card_tail(method):
                     account1 = find_account_by_card_number(self.config, tail)
-                    my_assert(account1, f"Unknown card number {tail}", lineno, row)
+                    if account1 is None:
+                        my_warn(f"Unknown card number {tail}", lineno, row)
+                        account1 = unknown_account(self.config, not expense)
 
                 # find from 商品说明 and 交易对方
                 account2 = None

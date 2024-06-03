@@ -8,7 +8,9 @@ from china_bean_importers.importer import PdfImporter
 
 
 def gen_txn(config, file, parts, lineno, flag, card_acc, real_name):
-    my_assert(len(parts) == 12, f"Cannot parse line in PDF", lineno, parts)
+    if len(parts) != 12:
+        my_warn(f"Cannot parse line in PDF", lineno, parts)
+        return None
     # print(parts, file=sys.stderr)
     #    0       1       2    3    4      5      6      7      8       9          10         11
     # 记账日期, 记账时间, 币别, 金额, 余额, 交易名称, 渠道, 网点名称, 附言, 对方账户名, 对方卡号/账号, 对方开户行
