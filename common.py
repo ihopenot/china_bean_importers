@@ -44,6 +44,8 @@ class BillDetailMapping(typing.NamedTuple):
         self, desc: str, payee: str
     ) -> tuple[typing.Optional[str], dict[str, object], set[str]]:
         # match narration first
+        nar_matched = True
+        payee_matched = True
         if desc is not None and self.narration_keywords is not None:
             for keyword in self.narration_keywords:
                 if keyword not in desc:
