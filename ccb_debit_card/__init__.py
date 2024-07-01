@@ -57,6 +57,15 @@ class Importer(CsvImporter):
                     attach,
                     payee,
                 ) = row[:10]
+
+                if in_blacklist(self.config, narration):
+                    my_warn(
+                        f"Item in blacklist: {time} {narration} [{amt}]",
+                        lineno,
+                        row,
+                    )
+                    continue
+
                 time = parse(time)
 
                 if cash == "人民币元":
