@@ -88,6 +88,9 @@ class Importer(CsvImporter):
                             expense = True
                     if payee == "花呗" and "还款" in narration:
                         expense = True
+                    if category == "账户存取" and "充值" in narration:
+                        expense = False
+                        tags.add("confirmation-needed")
                     if expense is None:
                         # if '交易关闭' in status or '解冻成功' in status:
                         my_warn(
