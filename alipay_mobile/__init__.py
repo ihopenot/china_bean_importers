@@ -120,6 +120,7 @@ class Importer(CsvImporter):
                     if account1 is None:
                         my_warn(f"Unknown card number {tail}", lineno, row)
                         account1 = unknown_account(self.config, not expense)
+                        tags.add("confirmation-needed")
 
                 # find from 商品说明 and 交易对方
                 account2 = None
