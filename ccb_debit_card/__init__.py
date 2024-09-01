@@ -58,9 +58,9 @@ class Importer(CsvImporter):
                     payee,
                 ) = row[:10]
 
-                if in_blacklist(self.config, narration):
+                if in_blacklist(self.config, attach):
                     my_warn(
-                        f"Item in blacklist: {time} {narration} [{amt}]",
+                        f"Item in blacklist: {time} {attach} [{amt}]",
                         lineno,
                         row,
                     )
