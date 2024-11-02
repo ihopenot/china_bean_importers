@@ -99,7 +99,9 @@ class Importer(CsvImporter):
                     account1 = source_config["account"]
                 elif tail := match_card_tail(method):  # cards
                     account1 = find_account_by_card_number(self.config, tail)
-                    my_assert(account1, f"Unknown card number {tail}", lineno, row)
+                    if account1 is None:
+                        account1 = unknown_account(self.config, expense)
+                        my_warn(f"Unknown card number {tail}", lineno, row)
 
                 if account1 is None:
                     account1 = unknown_account(self.config, not expense)
